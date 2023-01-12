@@ -132,19 +132,8 @@ class Recommender:
             #     + tf.einsum('abc,ba->bc', tf.stack([ulat_layer_shared,ulat_layer_noise]), atten_local_user))
 			# ilats.append(ilat + tf.einsum('abc,ba->bc', tf.stack([item_shared_emb,item_noise_emb]), atten_lg_item) 
             #     + tf.einsum('abc,ba->bc', tf.stack([ilat_layer_shared,ilat_layer_noise]), atten_local_item)) 
-			if args.mode == 3:
-				ulats.append(ulat + user_shared_emb + tf.einsum('abc,ba->bc', tf.stack([ulat_layer_shared,ulat_layer_noise]), atten_local_user))
-				ilats.append(ilat + item_shared_emb + tf.einsum('abc,ba->bc', tf.stack([ilat_layer_shared,ilat_layer_noise]), atten_local_item))
-			# w/o disentangle residual enhanced
-			elif args.mode == 2:
-				# ulats.append(ulat + user_shared_emb+(ulat_layer_shared+ulat_layer_noise)/2)
-				# ilats.append(ilat + item_shared_emb+(ilat_layer_shared+ilat_layer_noise)/2)
-				ulats.append(ulat + user_shared_emb + ulats[-1])
-				ilats.append(ilat + item_shared_emb + ilats[-1])
-			# w/o hyper-representation refinement 
-			elif args.mode == 1:
-				ulats.append(ulat + hyperULat + tf.einsum('abc,ba->bc', tf.stack([ulat_layer_shared,ulat_layer_noise]), atten_local_user))
-				ilats.append(ilat + hyperILat + tf.einsum('abc,ba->bc', tf.stack([ilat_layer_shared,ilat_layer_noise]), atten_local_item))
+			ulats.append(ulat + hyperULat + tf.einsum('abc,ba->bc', tf.stack([ulat_layer_shared,ulat_layer_noise]), atten_local_user))
+			ilats.append(ilat + hyperILat + tf.einsum('abc,ba->bc', tf.stack([ilat_layer_shared,ilat_layer_noise]), atten_local_item))
 
 		ulat = tf.add_n(ulats)
 		ilat = tf.add_n(ilats)
